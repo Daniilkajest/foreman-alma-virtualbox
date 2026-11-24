@@ -51,5 +51,11 @@ sudo HOST=alma-node01.lab.test ./scripts/verify.sh
 
 ## Важное про iPXE
 
-Встроенный legacy iPXE/PXE ROM VirtualBox в данном стенде объявлял только `DNS TFTP PXEXT` и не поддерживал HTTP (`Operation not supported`). Поэтому доказанная установка выполнена через `PXELinux BIOS`. Архитектура допускает переход на полноценный HTTP-capable iPXE (`undionly.kpxe`/iPXE ISO); процедура описана в `docs/IPXE.md`. Это ограничение firmware VirtualBox, а не Foreman.
+В Oracle VM VirtualBox использовалась загрузка VM в режиме Legacy BIOS.
+Встроенная PXE-прошивка виртуального сетевого адаптера поддерживала DHCP
+и TFTP, но не загрузку по HTTP. Поэтому рабочая автоматическая установка
+AlmaLinux выполнена через PXELinux BIOS и TFTP. Foreman при этом управляет
+DHCP, DNS, TFTP, загрузочными шаблонами и Kickstart. Для перехода на
+HTTP-загрузку необходимо отдельно подключить полноценный iPXE-загрузчик,
+например `undionly.kpxe` или iPXE ISO.
 
