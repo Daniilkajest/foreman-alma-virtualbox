@@ -1,0 +1,19 @@
+<%#
+kind: snippet
+name: AlmaLinux NTP post
+model: ProvisioningTemplate
+description: Configure Chrony during AlmaLinux Kickstart provisioning.
+-%>
+<%
+servers = (host_param('ntp_servers') || '0.pool.ntp.org,1.pool.ntp.org').split(',').map(&:strip)
+servers = servers.select { |server| server.match?(/\A[a-zA-Z0-9_.:-]+\z/) }
+-%>
+echo 'Configuring Chrony from Foreman provisioning template'
+dnf -y install chrony
+sed -i -E '/^[[:space:]]*(server|pool)[[:space:]]+/d' /etc/chrony.conf
+<% servers.each do |server| -%>
+echo 'server <%= server %> iburst' >> /etc/chrony.conf
+<% end -%>
+timedatectl set-timezone <%= host_param('timezone') || 'Europe/Moscow' %>
+systemctl enable chronyd
+

@@ -1,0 +1,7 @@
+*.log
+*.tar.gz
+*.zip
+screenshots/private/
+secrets/
+.env
+

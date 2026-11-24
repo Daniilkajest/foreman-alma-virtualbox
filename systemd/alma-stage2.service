@@ -1,0 +1,21 @@
+[Unit]
+Description=AlmaLinux local stage2 HTTP service for provisioning
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=foreman-proxy
+Group=foreman-proxy
+ExecStart=/usr/bin/python3 -m http.server 8080 --bind 192.168.56.10 --directory /var/lib/foreman/public/alma9
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/var/lib/foreman/public/alma9
+
+[Install]
+WantedBy=multi-user.target
+

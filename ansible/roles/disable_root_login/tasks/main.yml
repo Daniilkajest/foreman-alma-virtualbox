@@ -1,0 +1,28 @@
+---
+- name: Disable direct root login over SSH
+  ansible.builtin.copy:
+    dest: /etc/ssh/sshd_config.d/00-disable-root-login.conf
+    content: |
+      # Managed by Foreman/Ansible. Local edits will be overwritten.
+      PermitRootLogin no
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload sshd
+
+- name: Validate SSH configuration
+  ansible.builtin.command: /usr/sbin/sshd -t
+  changed_when: false
+
+- name: Read effective SSH configuration
+  ansible.builtin.command: /usr/sbin/sshd -T
+  register: sshd_effective
+  changed_when: false
+
+- name: Assert root SSH login is disabled
+  ansible.builtin.assert:
+    that:
+      - "'permitrootlogin no' in sshd_effective.stdout_lines"
+    fail_msg: Root SSH login is not disabled
+    success_msg: Root SSH login is disabled
+
