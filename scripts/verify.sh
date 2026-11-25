@@ -25,7 +25,7 @@ node_ip="$(hostname -I | awk '{print $1}')"
 ntp_sync="$(timedatectl show -p NTPSynchronized --value)"
 chronyd_state="$(systemctl is-active chronyd || true)"
 permit_root="$(sudo /usr/sbin/sshd -T |
-  awk '$1 == "permitrootlogin" {print $2; exit}')"
+  awk '$1 == "permitrootlogin" {print $2}')"
 
 printf 'FQDN=%s\n' "${node_fqdn}"
 printf 'IP=%s\n' "${node_ip}"
